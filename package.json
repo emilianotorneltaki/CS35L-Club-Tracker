@@ -1,0 +1,24 @@
+{
+  "name": "cs35l-club-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "dev": "concurrently \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "install:all": "npm install && npm --prefix client install && npm --prefix server install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emilianotorneltaki/CS35L-Club-Tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emilianotorneltaki/CS35L-Club-Tracker/issues"
+  },
+  "homepage": "https://github.com/emilianotorneltaki/CS35L-Club-Tracker#readme",
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}

@@ -2,7 +2,7 @@
 create table if not exists public.clubs (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null unique references auth.users (id) on delete cascade,
-  name text not null,
+  name text not null check (char_length(trim(name)) > 0),
   draft_description text not null default '',
   published_description text not null default '',
   draft_images text[] not null default '{}',

@@ -2,7 +2,7 @@
 create table if not exists public.clubs (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null unique references auth.users (id) on delete cascade,
-  name text not null check (char_length(trim(name)) > 0),
+  name text not null constraint clubs_name_not_blank check (char_length(trim(name)) > 0),
   draft_description text not null default '',
   published_description text not null default '',
   draft_images text[] not null default '{}',
@@ -16,7 +16,7 @@ create table if not exists public.clubs (
 
 -- Checks club names are unique (ignoring case)
 create unique index if not exists clubs_name_unique
-  on public.clubs (lower(name));
+  on public.clubs (lower(trim(name)));
 
 -- Block direct browser access. Only the Express server (secret key) can use it.
 alter table public.clubs enable row level security;

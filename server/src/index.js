@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import clubsRouter from './routes/clubs.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -23,3 +24,5 @@ app.get('/api/health/db', async (req, res) => {
   }
   res.json({ status: 'ok' });
 });
+
+app.use('/api/clubs', clubsRouter);

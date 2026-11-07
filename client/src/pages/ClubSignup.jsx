@@ -34,34 +34,34 @@ export default function ClubSignup() {
         } finally {
             setLoading(false);
         }
-
-          return (
-            <form onSubmit={handleSubmit}>
-            <h1>Create a club account</h1>
-
-            <label>
-                Club name
-                <input value={name} onChange={(e) => setName(e.target.value)} required />
-            </label>
-
-            <label>
-                Contact email
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            </label>
-
-            <label>
-                Password
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
-            </label>
-
-            <button type="submit" disabled={loading}>
-                {loading ? 'Creating account…' : 'Sign up'}
-            </button>
-
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {message && <p>{message}</p>}
-            </form>
-            
-        );
     }
+
+        return (
+        <form onSubmit={handleSubmit}>
+        <h1>Create a club account</h1>
+
+        <label>
+            Club name
+            <input value={name} onChange={(e) => setName(e.target.value)} required />
+        </label>
+
+        <label>
+            Contact email
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </label>
+
+        <label>
+            Password
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+        </label>
+
+        <button type="submit" disabled={loading}>
+            {loading ? 'Creating account…' : 'Sign up'}
+        </button>
+
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {message && <p>{message}</p>}
+        </form>
+
+    );
 }

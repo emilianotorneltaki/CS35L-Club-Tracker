@@ -1,15 +1,13 @@
-import express from 'express';
+import { Router } from 'express';
+import { studentSignup, studentLogin, clubLogin, me } from '../controllers/auth.js';
+import { requireAuth } from '../middleware/requireAuth.js';
 
-const router = express.Router();
+const router = Router();
 
-router.post('/login', (req, res) => {
-    
-    
-    res.status(200).json({ status: "to-do" });
-    
-
-
-
-});
+router.post('/student/signup', studentSignup);
+router.post('/student/login', studentLogin);
+router.post('/club/login', clubLogin)
+router.get('/me', requireAuth, me);
 
 export default router;
+

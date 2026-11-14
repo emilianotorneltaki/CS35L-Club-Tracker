@@ -31,3 +31,10 @@ Fill in your credentials at `server/.env`, including the supabase links.
 ## Database
 Wrote schema in `supabase/schema.sql`. All teammates share one
 Supabase project, changes to schema go through a pull request.
+
+## Auth setup (MH1/MH2)
+Student sign-up sends a verification email through Supabase Auth. In the
+Supabase dashboard, under Authentication:
+- Sign In / Providers → Email: keep "Confirm email" turned on.
+- URL Configuration: set Site URL to `http://localhost:5173` and add
+  `http://localhost:5173/auth/callback` to Redirect URLs.

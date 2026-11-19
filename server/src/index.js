@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import clubsRouter from './routes/clubs.js';
+import { supabase } from './services/supabase.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -10,16 +11,11 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
-
 app.use('/api/clubs', clubsRouter);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
-
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
-
-import { supabase } from './services/supabase.js';
 
 app.get('/api/health/db', async (req, res) => {
   const { error } = await supabase.auth.admin.listUsers({ page: 1, perPage: 1 });
@@ -28,3 +24,5 @@ app.get('/api/health/db', async (req, res) => {
   }
   res.json({ status: 'ok' });
 });
+
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));

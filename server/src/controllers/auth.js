@@ -90,3 +90,28 @@ export async function studentLogin(req, res) {
 export function me(req, res) {
   res.json({ user: toPublicUser(req.user) });
 }
+
+//MH7: log in a club account
+export async function clubLogin(req, res) {
+  const { email, password } = readCredentials(req.body);
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  const { data, error } = await createAuthClient().auth.signInWithPassword({ email, password });
+  if (error) {
+    if (error.code === 'email_not_confirmed') {
+      return res.status(403).json({ error: 'Please verify your email before logging in' });
+    }
+    return res.status(401).json({ error: 'Invalid email or password' });
+  }
+  if (!(await isClubAccount(data.user.id))) {
+    return res.status(403).json({ error: 'This is a student account, use student login instead' });
+  }
+
+  const { access_token, refresh_token, expires_at } = data.session;
+  res.json({
+    session: { access_token, refresh_token, expires_at },
+    user: toPublicUser(data.user),
+  });
+}

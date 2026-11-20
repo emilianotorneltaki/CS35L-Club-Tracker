@@ -1,5 +1,7 @@
 import express from 'express';
 import { supabase } from '../services/supabase.js';
+import { requireAuth } from '../middleware/requireAuth.js';
+import { validateLink } from '../utils/links.js';
 
 const router = express.Router();
 
@@ -66,7 +68,13 @@ router.get('/', async (req, res) => {
 
   let clubs;
   if (!keyword) {
-    const { data, error } = await supabase.from('clubs').select(PUBLIC_FIELDS);
+      const { data, error } = await supabase
+    .from('clubs')
+    .select(`${PUBLIC_FIELDS}, links:club_links(id, type, url)`) //SH7: pulls the links from the database
+    .eq('id', id)
+    .order('created_at', { referencedTable: 'club_links' })
+    .maybeSingle();
+
     if (error) return res.status(500).json({ error: error.message });
     clubs = data;
   } else {

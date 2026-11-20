@@ -1,8 +1,3 @@
-
-
-
-
-// 
 export const LINK_TYPES = {
     website: {label:"Website", hosts:null}, 
     instagram: {label:"Instagram", hosts:["instagram.com"]}, 

@@ -86,9 +86,16 @@ export async function studentLogin(req, res) {
     user: toPublicUser(data.user),
   });
 }
+//SH7: updated to also return clubId (null for students) so that client knows which club page the user owns
+export async function me(req, res) {
+  const { data: club, error } = await supabase
+    .from('clubs')
+    .select('id')
+    .eq('owner_id', req.user.id)
+    .maybeSingle();
+  if (error) return res.status(500).json({ error: error.message });
 
-export function me(req, res) {
-  res.json({ user: toPublicUser(req.user) });
+  res.json({ user: { ...toPublicUser(req.user), clubId: club?.id ?? null } });
 }
 
 //MH7: log in a club account

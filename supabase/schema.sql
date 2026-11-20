@@ -20,3 +20,18 @@ create unique index if not exists clubs_name_unique
 
 -- Block direct browser access. Only the Express server (secret key) can use it.
 alter table public.clubs enable row level security;
+
+--SH7, made so a club can have any number of links, each tagged with one type.
+create table if not exists public.club_links (
+  id uuid primary key default gen_random_uuid(),
+  club_id uuid not null references public.clubs (id) on delete cascade,
+  type text not null
+    check (type in ('website', 'instagram', 'linkedin', 'discord', 'slack')),
+  url text not null check (url ~* '^https?://'),
+  created_at timestamptz not null default now(),
+  unique (club_id, url)
+);
+
+create index if not exists club_links_club_id_idx on public.club_links (club_id);
+
+alter table public.club_links enable row level security;

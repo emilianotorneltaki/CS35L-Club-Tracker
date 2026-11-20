@@ -1,0 +1,58 @@
+
+
+
+
+// 
+export const LINK_TYPES = {
+    website: {label:"Website", hosts:null}, 
+    instagram: {label:"Instagram", hosts:["instagram.com"]}, 
+    linkedin: {label:"LinkedIn",hosts:["linkedin.com"]}, 
+    discord: {label:"Discord", hosts:["discord.gg", "discord.com"]}, 
+    slack: {label:"Slack",hosts:["slack.com"]}
+}
+export const LINK_TYPE_IDS = Object.keys(LINK_TYPES);
+
+
+//takes in a url and checks whether it is a valid link
+function hostMatches(hostname, allowed) {
+    return hostname === allowed || hostname.endsWith(`.${allowed}`);
+}
+
+// Returns url with a cleaned-up link, or error with a message to show the user.
+export function validateLink(type, rawUrl) {
+    if (!LINK_TYPE_IDS.includes(type)) {
+        return { error: 'Pick a link type.' };
+    }
+
+    //check whether anything was entered
+    const trimmed = String(rawUrl ?? '').trim();
+    if (!trimmed) {
+        return { error: 'Enter a link.' };
+    }
+
+    //check whether you have an actual URL
+    let parsed;
+    try {
+        parsed = new URL(trimmed);
+    } catch {
+        return { error: "That isn't a valid link. Make sure it starts with https://" };
+    }
+
+    //check if URL is a web link
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+        return { error: 'Links must start with https:// or http://' };
+    }
+
+  //domain needs a dot (rejects things like https://localhost).
+    if (!parsed.hostname.includes('.')) {
+        return { error: "That isn't a valid link." };
+    }
+
+  //Check whether URL follows the types certain domains.
+    const { label, hosts } = LINK_TYPES[type];
+    if (hosts && !hosts.some((host) => hostMatches(parsed.hostname, host))) {
+        return { error: `${label} links must be on ${hosts.join(' or ')}.` };
+        }
+    
+    return { url: parsed.href };
+}

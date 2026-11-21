@@ -68,12 +68,7 @@ router.get('/', async (req, res) => {
 
   let clubs;
   if (!keyword) {
-      const { data, error } = await supabase
-    .from('clubs')
-    .select(`${PUBLIC_FIELDS}, links:club_links(id, type, url)`) //SH7: pulls the links from the database
-    .eq('id', id)
-    .order('created_at', { referencedTable: 'club_links' })
-    .maybeSingle();
+    const { data, error } = await supabase.from('clubs').select(PUBLIC_FIELDS);
 
     if (error) return res.status(500).json({ error: error.message });
     clubs = data;
@@ -112,14 +107,59 @@ router.get('/:id', async (req, res) => {
 
   const { data, error } = await supabase
     .from('clubs')
-    .select(PUBLIC_FIELDS)
+    .select(`${PUBLIC_FIELDS}, links:club_links(id, type, url)`) //SH7: pulls the links from the database
     .eq('id', id)
+    .order('created_at', { referencedTable: 'club_links' })
     .maybeSingle();
 
   if (error) return res.status(500).json({ error: error.message });
   if (!data) return res.status(404).json({ error: 'Club not found' });
   res.json(data);
 });
+
+// SH7: POST /api/clubs/:id/links
+// Club accounts use to add a website or social media link.
+router.post('/:id/links', requireAuth, async (req, res) => {
+  const { id } = req.params;
+  if (!UUID_RE.test(id)) {
+    return res.status(404).json({ error: 'Club not found' });
+  }
+
+  // Only the account that owns this club may add links to it.
+  const { data: club, error: clubError } = await supabase
+    .from('clubs')
+    .select('id, owner_id')
+    .eq('id', id)
+    .maybeSingle();
+  if (clubError) return res.status(500).json({ error: clubError.message });
+  if (!club) return res.status(404).json({ error: 'Club not found' });
+  if (club.owner_id !== req.user.id) {
+    return res.status(403).json({ error: 'You can only add links to your own club.' });
+  }
+
+  // Invalid link: send the reason back and save nothing.
+  const { type, url } = req.body ?? {};
+  const result = validateLink(type, url);
+  if (result.error) {
+    return res.status(400).json({ error: result.error });
+  }
+
+  const { data: link, error: insertError } = await supabase
+    .from('club_links')
+    .insert({ club_id: id, type, url: result.url })
+    .select('id, type, url')
+    .single();
+  if (insertError) {
+    // 23505 = Postgres "unique violation" (the same link was already added)
+    if (insertError.code === '23505') {
+      return res.status(409).json({ error: 'That link is already on your club page.' });
+    }
+    return res.status(500).json({ error: insertError.message });
+  }
+
+  res.status(201).json(link);
+});
+
 
 // Instead of modules.export = router since we are already using imports in index.js, let's keep it consistent
 export default router;

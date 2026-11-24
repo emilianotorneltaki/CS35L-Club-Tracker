@@ -1,3 +1,4 @@
+import ClubSections from '../components/ClubSections.jsx';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { getClub } from '../api/clubs.js';
@@ -53,6 +54,7 @@ export default function ClubPage() {
             ))}
           </div>
         )}
+        <ClubSections clubId={club.id} />
       </article>
     );
   }

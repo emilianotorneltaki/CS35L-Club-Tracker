@@ -11,6 +11,7 @@ import AuthCallback from './pages/AuthCallback.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
+import RecruitmentSettings from './pages/RecruitmentSettings.jsx';
 
 function App() {
   return (
@@ -28,6 +29,14 @@ function App() {
           element={
             <RequireAuth>
               <Dashboard />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/club/recruitment"
+          element={
+            <RequireAuth>
+              <RecruitmentSettings />
             </RequireAuth>
           }
         />

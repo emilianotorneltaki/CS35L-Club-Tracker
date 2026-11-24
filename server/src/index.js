@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import clubsRouter from './routes/clubs.js';
+import clubContentRouter from './routes/clubContent.js';
 import { supabase } from './services/supabase.js';
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/clubs', clubsRouter);
+app.use('/api/clubs', clubContentRouter);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });

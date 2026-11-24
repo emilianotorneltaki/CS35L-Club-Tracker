@@ -159,3 +159,217 @@ button:disabled {
   font-size: 32px;
   margin: 0 0 24px;
 }
+
+/* Club page tabs (Timeline / Open Positions) */
+.club-sections {
+  margin-top: 32px;
+}
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+.tab {
+  background: none;
+  color: var(--text);
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  padding: 10px 14px;
+  white-space: nowrap;
+}
+.tab:hover {
+  color: var(--text-h);
+}
+.tab.active {
+  color: var(--text-h);
+  border-bottom-color: var(--accent);
+}
+.tab-count {
+  margin-left: 6px;
+  font-size: 13px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* Shared form styles for events and positions */
+.content-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 28px;
+}
+.content-form h2 {
+  margin: 0;
+}
+.content-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text-h);
+  font-size: 15px;
+  flex: 1;
+}
+.content-form input,
+.content-form textarea {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+  resize: vertical;
+}
+.content-form [aria-invalid='true'] {
+  border-color: #d92d20;
+}
+.content-form button[type='submit'] {
+  align-self: flex-start;
+}
+.form-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.form-actions {
+  display: flex;
+  gap: 8px;
+}
+.field-error {
+  color: #d92d20;
+  font-size: 14px;
+}
+.char-count {
+  align-self: flex-end;
+  font-size: 13px;
+  color: var(--text);
+}
+.char-count.over {
+  color: #d92d20;
+}
+.required {
+  font-size: 13px;
+  color: var(--text);
+}
+button.secondary {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+.owner-note {
+  margin-bottom: 20px;
+}
+.owner-note a,
+.success a,
+.dashboard-links a {
+  color: var(--accent);
+}
+.success {
+  color: #12a150;
+  margin: -16px 0 24px;
+}
+.section-heading {
+  margin-top: 8px;
+}
+.dashboard-links {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+/* Timeline: events in date order, joined by a vertical line */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.timeline-item {
+  position: relative;
+  padding: 0 0 28px 32px;
+}
+/* The connector runs from this event's dot down to the next one. */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 18px;
+  bottom: -6px;
+  width: 2px;
+  background: var(--accent-border);
+}
+.timeline-item:last-child::before {
+  display: none;
+}
+.timeline-dot {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+}
+.timeline-date {
+  display: block;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 500;
+}
+.timeline-name {
+  margin: 2px 0 4px;
+  color: var(--text-h);
+  font-size: 20px;
+  font-weight: 500;
+}
+.timeline-description {
+  white-space: pre-wrap;
+}
+
+/* Open positions */
+.position-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.position-card {
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.position-card .content-form {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.position-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.position-header h3 {
+  margin: 0 0 6px;
+  color: var(--text-h);
+  font-size: 20px;
+  font-weight: 500;
+}
+.position-card h4 {
+  margin: 12px 0 4px;
+  color: var(--text-h);
+  font-size: 15px;
+}
+.position-description,
+.position-requirements {
+  white-space: pre-wrap;
+}

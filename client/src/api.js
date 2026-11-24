@@ -9,6 +9,11 @@ export async function api(path, { method = 'GET', body, token } = {}) {
     body: body && JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || 'Something went wrong');
+  if (!res.ok) {
+    const err = new Error(data.error || 'Something went wrong');
+    err.status = res.status;
+    err.fields = data.fields; // per-field messages from validation errors, if any
+    throw err;
+  }
   return data;
 }

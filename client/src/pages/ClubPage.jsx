@@ -1,12 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { getClub } from '../api/clubs.js';
+import { useAuth } from '../auth/AuthContext.js';
+import AddLinkForm from '../components/AddLinkForm.jsx';
+import { linkLabel } from '../linkTypes.js';
 
 // MH4: a club's page, showing its name and published description.
 export default function ClubPage() {
   const { id } = useParams();
   const location = useLocation();
   const [result, setResult] = useState(null);
+  const { user } = useAuth();
+
+  // SH7: show a newly added link without reloading the page.
+  function handleLinkAdded(link) {
+    setResult((prev) => ({
+      ...prev,
+      club: { ...prev.club, links: [...(prev.club.links ?? []), link] },
+    }));
+  }
 
   useEffect(() => {
     const controller = new AbortController();
@@ -36,6 +48,8 @@ export default function ClubPage() {
     );
   } else {
     const { club } = result;
+    const links = club.links ?? [];
+    const isOwner = Boolean(user?.clubId) && user.clubId === club.id;
     content = (
       <article className="club-page">
         <h1 className="page-title">{club.name}</h1>
@@ -46,6 +60,25 @@ export default function ClubPage() {
             <p className="status">This club hasn’t added a description yet.</p>
           )}
         </section>
+          {(links.length > 0 || isOwner) && (
+          <section className="club-links">
+            <h2>Links</h2>
+            {links.length > 0 ? (
+              <ul>
+                {links.map((link) => (
+                  <li key={link.id}>
+                    <a href={link.url} target="_blank" rel="noopener noreferrer">
+                      {linkLabel(link.type)}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="status">No links yet. Add your website or socials.</p>
+            )}
+            {isOwner && <AddLinkForm clubId={club.id} onAdded={handleLinkAdded} />}
+          </section>
+        )}
         {club.images?.length > 0 && (
           <div className="club-images">
             {club.images.map((src) => (
